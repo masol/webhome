@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.4.0/fabric.min.js"/>
+	<script src="../src/webhome.js"/>
+  </head>
+  
+  <div>
+  <h3>Testing </h3>
+    <canvas id="test" width="640" height="480"></canvas>
+  </div>
+  <!-- Please visit testreplace.html see the API webhome Controller will support.
+   
+   the wall testing the functionality of drawing a wall.
+  -->
+  <script>
+ 
+	//first, we create the webhome controller based our canvas.
+	var homectl = webhome.Create('test');
+	
+	homectl.Setbackground(imgobj);
+	
+	///switch to draw wall state. home controller will responsible to react with mouse/touch to draw a serial wall to form a house style.
+	homectl.SetState('Draw');
+	
+	//connect an event from homectl. 
+	//drawed event fired after user finished a house style.
+	homectl.on('drawed',function(objarray){
+		//
+	});
+	
+	
+	//The follow function is valid only when current selected object is a wall.
+	//This give the actual length of a wall. Using this to resize all wall's size and keep the proportion.
+	homectl.decideSize(length);
+	//Because all of our furniture mark the real size. So this step is needed.
+	//We need check this flag to ensure we save the real size in our data.
+	homectl.isSizeDetermined();
+	
+	
+  </script>
+</html>

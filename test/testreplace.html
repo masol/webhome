@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.4.0/fabric.min.js"/>
+	<script src="../src/webhome.js"/>
+  </head>
+  
+  <div>
+  <h3>Testing </h3>
+    <canvas id="test" width="640" height="480"></canvas>
+  </div>
+  <script>
+	//first, we create the webhome controller based our canvas.
+	var homectl = webhome.create('test');
+	
+	//we will using backbone.js to sync the data with remote server, after get the data, we set the dataset. 
+	//You need to define the jsondata format.
+	//Notice: the jsondata can using Fabric json directly, we only need extend a few property.
+	//All of this property is pre-defined data. you can totally ignore the problem how to prepare the data.
+	///VERY IMPORT: please give the exactly definition of this JSONDATA.
+	homectl.setHomeData(jsondata);
+	//after this call, the canvas will be showed.
+	
+	//set home controller to enter an edit mode. In this mode, the controller is responsible react with mouse/touch/keyboard to replace some furniture. This is default mode after create. another mode is Draw used to draw wall.
+	//homectl.setState('Edit');
+	//homectl.getState(); //we can get current home controller state through this function.
+
+	
+	//connect an event from homectl. 
+	//at now, we support one event 'replace'. If user click on a furniture. the callback called. clicked object as the parameter. 
+	homectl.on('replace',function(obj){
+		//We will show a ui let user to select new object.
+	});
+	homectl.on('hover',function(obj){
+		//notify when mouse over a furniture object. We will show a div with furniture information upon it.
+	});
+
+	//After user select a furniture with same type . we will replace the old furniture.
+	//$(.xxx).on('click',function(){
+	
+	//the follow action function is called after furniture data is received.
+	homectl.replace(obj,newobj);
+	//same with top, except the second parameter is id.
+	homectl.replaceId(objid,newobj);
+	
+	//last, we try to get current persist object of current scene from webhome controller.
+	var jsondata = homectl.getJson();
+	
+	
+  </script>
+</html>
