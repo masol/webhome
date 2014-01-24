@@ -21,8 +21,8 @@ about the code
   * The widget itself don't care how to synchronize data with remote server. Manipulating data.io is the duty of caller instead of Webhome itself. You can check the testing code to understanding this.
   * The widget itself only manipulate the editing window. I.E ```javascript  var homewidget = webhome.Create('test'); ```.This home edit widget only generate the scene. No toolbar, tree tec... It's the duty of caller to manipulate other UI widget.
 4. Data Type Definition:
-  * [Home](DTD_Home)
-  * [Item](DTD_Item)
+  * [Home](home.dtd.md)
+  * [Item](item.dtd.md)
   
 Plan
 ----
