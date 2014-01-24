@@ -27,8 +27,20 @@ if(!_)
  * 3. optional, we can provide version that depend underscore and fabric.
  */
 var webhome = function(){
-	
-  return _.extend(webhome, {
+    var fakeEvents = {
+        hover: function(callback, scene){
+            var hovered = false;
+            scene.on('mouse:move', function(options){
+                if(options.target){
+                    !hovered && callback.apply(options.target, arguments);
+                    hovered = true;
+                } else {
+                    hovered = false;
+                }
+            });
+        }
+    };
+  return _.extend({}, {
 	_scene: null,
 	_currentState: "edit",
 	_keyBinding: function(){
@@ -69,6 +81,16 @@ var webhome = function(){
 			});
 		}
 	},
+    setHomeData: function(data){
+        this._scene.loadFromJSON(data);
+    },
+    on: function(eventName, callback){
+        if(fakeEvents[eventName]){
+            fakeEvents[eventName](callback, this._scene);
+        } else {
+            this._scene.on(eventName, callback);
+        }
+    },
 	setState: function(state){
 		this._currentState = state;
 		if(state == "draw"){
