@@ -10,7 +10,25 @@
 /** Because we are multiple cooperate, this file can been divide to multi-file. 
 * and merge through a js compiler to generate final file.
 **/
-var webhome = {
+
+/** we using underscore.js to enable sub-module.
+ * @FIXME: Shall we using more heavy library : require.js?
+ */
+if(!_)
+{
+  throw 'underscore not found.';
+}
+
+/** @FIXME: this not tested, @Dariel, plese testing it next time.
+ * This allow caller to include multiple module during the time of developing.
+ * We will make a build.sh like simpoe 2 step:
+ * 1. cat all module to one file.
+ * 2. using google cloure to break the depence to Fabric.js and Underscore.js, emit redundant code about module.
+ * 3. optional, we can provide version that depend underscore and fabric.
+ */
+var webhome = function(){
+	
+  return _.extend(webhome, {
 	_scene: null,
 	_currentState: "edit",
 	_keyBinding: function(){
@@ -63,4 +81,6 @@ var webhome = {
 	getState: function(){
 		return this._currentState;
 	}
-};
+  });
+}();
+
