@@ -52,3 +52,9 @@ Because we are in a multi-peopel cooperate. So, please keep in mind to recude th
 * Webhome is developed under the mode of common open source. Before you enter one direction, please read the plan wiki of colleagues.
 * Plese maintain an personal plan in wiki.This personal plan list what you want to do next and what is your concerns.
 * You are better to commit frequently or create an new branch for your self and merge at last.
+
+
+Sub-Compoent
+------------
+
+* [Wall Wdiget](../../wiki/Wall-editor) owned by [ikantam](https://github.com/ikantam).
