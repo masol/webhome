@@ -57,4 +57,4 @@ Because we are in a multi-peopel cooperate. So, please keep in mind to recude th
 Sub-Compoent
 ------------
 
-* [Wall Wdiget](../../wiki/Wall-editor) owned by [ikantam](https://github.com/ikantam).
+* [Wall Wdiget](../../wiki/Wall-editor) contribute by [ikantam](https://github.com/ikantam).
