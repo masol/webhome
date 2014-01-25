@@ -14,10 +14,94 @@
 /** we using underscore.js to enable sub-module.
  * @FIXME: Shall we using more heavy library : require.js?
  */
-if(!_)
-{
-  throw 'underscore not found.';
-}
+define(['underscore'], function(_){
+    var
+        fakeEvents = {
+            hover: function(callback, scene){
+                var hovered = false;
+                scene.on('mouse:move', function(options){
+                    if(options.target){
+                        !hovered && callback.apply(options.target, arguments);
+                        hovered = true;
+                    } else {
+                        hovered = false;
+                    }
+                });
+            }
+        },
+        WebHome = function(CanvasID){
+            this.create(CanvasID);
+        }
+    ;
+    WebHome.prototype = _.extend(WebHome.prototype, {
+        _scene: null,
+        _currentState: "edit",
+        _keyBinding: function(){
+            var that = this;
+            window.onkeyup = function(e){
+                if(e.keyCode == 46){ // remove object from canvas
+                    if(that._scene){
+                        that._scene.remove(that._scene.getActiveObject());
+                    }
+                }
+            }
+            return this;
+        },
+        _createContextMenu: function(){
+            window.oncontextmenu = function(){
+                return false;
+            }
+            var that = this;
+            this._scene.upperCanvasEl.addEventListener("mousedown", function(e){
+                if(e.which == 3){
+                }
+            }, false);
+        },
+        create: function(CanvasID){
+            try{
+                this._scene = new fabric.Canvas(CanvasID);
+                this._keyBinding()._createContextMenu();
+                return this;
+            }catch(e){
+                alert("you need fabric.js library to use webhome");
+            }
+        },
+        setBackground: function(imgSrc){
+            if(this._scene){
+                var scene = this._scene;
+                this._scene.setBackgroundImage(imgSrc, function(){
+                    scene.renderAll();
+                });
+            }
+        },
+        setHomeData: function(data){
+            this._scene.loadFromJSON(data);
+        },
+        on: function(eventName, callback){
+            if(fakeEvents[eventName]){
+                fakeEvents[eventName](callback, this._scene);
+            } else {
+                this._scene.on(eventName, callback);
+            }
+        },
+        replace: function(object, newObject){
+
+        },
+        setState: function(state){
+            this._currentState = state;
+            if(state == "draw"){
+                this._scene.isDrawingMode = true;
+                this._scene.freeDrawingBrush.width = 10;
+            }else{
+                this._scene.isDrawingMode = false;
+            }
+        },
+        getState: function(){
+            return this._currentState;
+        }
+    });
+    return WebHome;
+});
 
 /** @FIXME: this not tested, @Dariel, plese testing it next time.
  * This allow caller to include multiple module during the time of developing.
@@ -26,83 +110,4 @@ if(!_)
  * 2. using google cloure to break the depence to Fabric.js and Underscore.js, emit redundant code about module.
  * 3. optional, we can provide version that depend underscore and fabric.
  */
-var webhome = function(){
-    var fakeEvents = {
-        hover: function(callback, scene){
-            var hovered = false;
-            scene.on('mouse:move', function(options){
-                if(options.target){
-                    !hovered && callback.apply(options.target, arguments);
-                    hovered = true;
-                } else {
-                    hovered = false;
-                }
-            });
-        }
-    };
-  return _.extend({}, {
-	_scene: null,
-	_currentState: "edit",
-	_keyBinding: function(){
-		var that = this;
-		window.onkeyup = function(e){
-			if(e.keyCode == 46){ // remove object from canvas
-				if(that._scene){
-					that._scene.remove(that._scene.getActiveObject());
-				}
-			}
-		}
-		return this;
-	},
-	_createContextMenu: function(){
-		window.oncontextmenu = function(){
-			return false;
-		}
-		var that = this;
-		this._scene.upperCanvasEl.addEventListener("mousedown", function(e){
-			if(e.which == 3){
-			}
-		}, false);
-	},
-	create: function(CanvasID){
-		try{
-			this._scene = new fabric.Canvas(CanvasID);
-			this._keyBinding()._createContextMenu();
-			return this;
-		}catch(e){
-			alert("you need fabric.js library to use webhome");
-		}
-	},
-	setBackground: function(imgSrc){
-		if(this._scene){
-			var scene = this._scene;
-			this._scene.setBackgroundImage(imgSrc, function(){
-				scene.renderAll();
-			});
-		}
-	},
-    setHomeData: function(data){
-        this._scene.loadFromJSON(data);
-    },
-    on: function(eventName, callback){
-        if(fakeEvents[eventName]){
-            fakeEvents[eventName](callback, this._scene);
-        } else {
-            this._scene.on(eventName, callback);
-        }
-    },
-	setState: function(state){
-		this._currentState = state;
-		if(state == "draw"){
-			this._scene.isDrawingMode = true;
-			this._scene.freeDrawingBrush.width = 10;
-		}else{
-			this._scene.isDrawingMode = false;
-		}
-	},
-	getState: function(){
-		return this._currentState;
-	}
-  });
-}();
 
