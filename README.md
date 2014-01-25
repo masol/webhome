@@ -6,7 +6,8 @@ WebHome
 Background
 ----------
 
- webhome is open source project supported by [SanPolo.Co.LTD](http://www.spolo.org). Official hosted at [opensource community of SanPolo Co.LTD](https://osc.spolo.org/root/webhome/tree/master).
+ Webhome is open source project supported by [SanPolo.Co.LTD](http://www.spolo.org). Official hosted at [Github](https://github.com/masol/webhome). 
+ Before you begin, please read the [Detail Background](../../wiki/Background) carefully.
  
 
 about the code
