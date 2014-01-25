@@ -46,7 +46,7 @@ This two step is easy too. just need more widget,it's same with home edit widget
 8. More for the futher requirement.
 
 
-Relative Projects
+Simlar Projects
 -----------------
 * [Sweet home](http://www.sweethome3d.com/)
 * [Planner 5D](https://planner5d.com/)
@@ -54,7 +54,7 @@ Relative Projects
 * [Live Interior 3D Pro](http://www.belightsoft.com/products/liveinterior/overview.php)
 * [LoveMyHome Designer](http://www.lovemyhome.net/)
 * [Floorplanner](http://www.floorplanner.com/)
-* [MagicPlan](http://www.sensopia.com/english/index.html)
+* [MagicPlan](http://www.sensopia.com/english/index.html) : This is iphone app and has amazing convenient manner to generate house style.
  
 Feature of webhome
 ------------------
