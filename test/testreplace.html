@@ -2,18 +2,22 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <script src="//cdnjs.cloudflare.com/ajax/libs/fabric.js/1.4.0/fabric.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
     <script>
         require.config({
             paths: {
                 'jquery': '//code.jquery.com/jquery-1.11.0.min',
                 'underscore': '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min',
-                'webhome': '../src/webhome'
+                'webhome': '../src/webhome',
+                'furniture': '../src/furniture',
+                'fabric': "//cdnjs.cloudflare.com/ajax/libs/fabric.js/1.4.0/fabric.min"
             },
             shim: {
                 "underscore": {
                     exports: "_"
+                },
+                "fabric": {
+                    exports: "fabric"
                 }
             }
         });
@@ -26,12 +30,21 @@
     <canvas id="test" width="640" height="480"></canvas>
 </div>
 <script>
-    require(['webhome'], function(WebHome){
+    require(['webhome', 'furniture/abstract'], function(WebHome, AFurniture){
 //        console.log(new WebHome('test'));
         //first, we create the webhome controller based our canvas.
         var homectl = new WebHome('test');
         var jsondata = {
             "objects": [
+//                {
+//                    "type": "furniture",
+//                    "src": "https://www.google.com.ua/images/srpr/logo11w.png",
+//                    "left": 50,
+//                    "top": 50,
+//                    "width": 300,
+//                    "height": 100,
+//                    "overlayFill": null, "stroke": null, "strokeWidth": 1, "strokeDashArray": null, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 1, "selectable": true, "hasControls": true, "hasBorders": true, "hasRotatingPoint": false, "transparentCorners": true, "perPixelTargetFind": false, "rx": 0, "ry": 0
+//                },
                 {
                     "type": "rect", "left": 50, "top": 50, "width": 20, "height": 20, "fill": "green", "overlayFill": null, "stroke": null, "strokeWidth": 1, "strokeDashArray": null, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 1, "selectable": true, "hasControls": true, "hasBorders": true, "hasRotatingPoint": false, "transparentCorners": true, "perPixelTargetFind": false, "rx": 0, "ry": 0
                 },
@@ -49,7 +62,7 @@
         //after this call, the canvas will be showed.
 
         //set home controller to enter an edit mode. In this mode, the controller is responsible react with mouse/touch/keyboard to replace some furniture. This is default mode after create. another mode is Draw used to draw wall.
-        //homectl.setState('Edit');
+        homectl.setState('view');
         //homectl.getState(); //we can get current home controller state through this function.
 
 
