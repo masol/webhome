@@ -28,7 +28,7 @@ if(!_)
  */
 var webhome = function(){
 	
-  return _.extend(webhome, {
+  return _.extend(this, {
 	_scene: null,
 	_currentState: "edit",
 	_keyBinding: function(){
