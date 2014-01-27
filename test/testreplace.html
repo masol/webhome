@@ -59,7 +59,9 @@
         //Notice: the jsondata can using Fabric json directly, we only need extend a few property.
         //All of this property is pre-defined data. you can totally ignore the problem how to prepare the data.
         ///VERY IMPORT: please give the exactly definition of this JSONDATA.
-        homectl.setHomeData(jsondata);
+        homectl.setHomeData(jsondata, function(){
+            homectl.setState('view');
+        });
 //        AFurniture.fromURL('https://www.google.com.ua/images/srpr/logo11w.png', function(img){
 //            homectl._scene.add(img);
 //        });
@@ -77,7 +79,6 @@
         //after this call, the canvas will be showed.
 
         //set home controller to enter an edit mode. In this mode, the controller is responsible react with mouse/touch/keyboard to replace some furniture. This is default mode after create. another mode is Draw used to draw wall.
-        homectl.setState('view');
         //homectl.getState(); //we can get current home controller state through this function.
 
 

@@ -35,7 +35,7 @@ define(['underscore', 'fabric'], function(_, fabric){
     ;
     WebHome.prototype = _.extend(WebHome.prototype, {
         _scene: null,
-        _currentState: "edit",
+        _currentState: "draw",
         _keyBinding: function(){
             var that = this;
             window.onkeyup = function(e){
@@ -74,8 +74,9 @@ define(['underscore', 'fabric'], function(_, fabric){
                 });
             }
         },
-        setHomeData: function(data){
-            this._scene.loadFromJSON(data);
+        setHomeData: function(data, callback){
+            callback = callback || function(){};
+            this._scene.loadFromJSON(data, callback);
         },
         on: function(eventName, callback){
             if(fakeEvents[eventName]){
@@ -88,16 +89,30 @@ define(['underscore', 'fabric'], function(_, fabric){
 
         },
         setState: function(state){
-            this._currentState = state;
             if(state == "draw"){
+                if(this._currentState != "draw"){
+                    this._toggleStates(false);
+                }
                 this._scene.isDrawingMode = true;
                 this._scene.freeDrawingBrush.width = 10;
             }else{
+                if(this._currentState == "draw"){
+                    this._toggleStates(true);
+                }
                 this._scene.isDrawingMode = false;
             }
+            this._currentState = state;
         },
         getState: function(){
             return this._currentState;
+        },
+        _toggleStates: function(to){
+            this._scene._objects.forEach(function(object){
+                object.selectable = !to;
+                object.lockMovementX = to;
+                object.lockMovementY = to;
+            });
+            this._scene.renderAll();
         }
     });
     return WebHome;
