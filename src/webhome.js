@@ -31,6 +31,8 @@ var webhome = function(){
   return _.extend(this, {
 	_scene: null,
 	_currentState: "edit",
+	_furnitures: [],
+	_snapGrid: 16,
 	_keyBinding: function(){
 		var that = this;
 		window.onkeyup = function(e){
@@ -51,6 +53,15 @@ var webhome = function(){
 			if(e.which == 3){
 			}
 		}, false);
+	},
+	_snapToGrid: function(){
+		var that = this;
+		this._scene.on("object:moving", function(options){
+			options.target.set({
+				top: Math.round(options.target.top / that._snapGrid) * that._snapGrid,
+				left: Math.round(options.target.left / that._snapGrid) * that._snapGrid
+			});
+		});
 	},
 	create: function(CanvasID){
 		try{
@@ -80,6 +91,37 @@ var webhome = function(){
 	},
 	getState: function(){
 		return this._currentState;
+	},
+	addFurniture: function(opts){
+		var that = this;
+		var furniture;
+		if(typeof opts.imgSource != "undefined"){
+			new fabric.Image.fromURL(opts.imgSource, function(frn){
+				that._scene.add(frn);
+				frn.set({
+					borderColor: "brown",
+					cornerColor: "brown",
+					cornerSize: 10,
+					transparentCorners: false
+				});
+				if(typeof opts.scale != "undefined"){
+					if(typeof opts.scale != "number"){
+						console.error("scale should be in float or integer. no scaling performed");
+					}else{
+						frn.scale(opts.scale);
+					}
+				}
+				that._scene.renderAll();
+				furniture = frn;
+			});
+			// check if furniture successfully added to canvas
+			console.log(furniture);
+			if(furniture){
+				opts.onFurnitureAdded();
+			}
+		}
+		// snap to grid
+		this._snapToGrid();
 	}
   });
 }();

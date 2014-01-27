@@ -12,6 +12,7 @@
   <canvas id="cvs" width="1024" height="600"></canvas>
   <input type="button" id="draw" value="Draw Mode" />
   <input type="button" id="edit" value="Edit Mode" />
+  <input type="button" id="add-furniture" value="Add Furniture" />
   <script type="text/javascript">
   var home = webhome.create("cvs");
   home.setBackground("grid.gif");
@@ -22,6 +23,16 @@
   
   $("#edit").on("click", function(){
 	  home.setState("edit");
+  });
+  
+  $("#add-furniture").on("click", function(){
+    home.addFurniture({
+    	imgSource: "bed.png",
+    	scale: 0.5, // usefull to set initial size
+    	onFurnitureAdded: function(){
+    		console.log("hello")
+    	}
+    });
   });
   </script>
 </body>
