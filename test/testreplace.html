@@ -10,7 +10,8 @@
                 'underscore': '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min',
                 'webhome': '../src/webhome',
                 'furniture': '../src/furniture',
-                'fabric': "//cdnjs.cloudflare.com/ajax/libs/fabric.js/1.4.0/fabric.min"
+//                'fabric': "//cdnjs.cloudflare.com/ajax/libs/fabric.js/1.4.0/fabric.min"
+                'fabric': "../vendor/fabric.js-1.4.0/dist/all.require"
             },
             shim: {
                 "underscore": {
@@ -36,15 +37,15 @@
         var homectl = new WebHome('test');
         var jsondata = {
             "objects": [
-//                {
-//                    "type": "furniture",
-//                    "src": "https://www.google.com.ua/images/srpr/logo11w.png",
-//                    "left": 50,
-//                    "top": 50,
-//                    "width": 300,
-//                    "height": 100,
-//                    "overlayFill": null, "stroke": null, "strokeWidth": 1, "strokeDashArray": null, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 1, "selectable": true, "hasControls": true, "hasBorders": true, "hasRotatingPoint": false, "transparentCorners": true, "perPixelTargetFind": false, "rx": 0, "ry": 0
-//                },
+                {
+                    "type": "furniture",
+                    "src": "https://www.google.com.ua/images/srpr/logo11w.png",
+                    "left": 50,
+                    "top": 50,
+                    "width": 300,
+                    "height": 100,
+                    "overlayFill": null, "stroke": null, "strokeWidth": 1, "strokeDashArray": null, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 1, "selectable": true, "hasControls": true, "hasBorders": true, "hasRotatingPoint": false, "transparentCorners": true, "perPixelTargetFind": false, "rx": 0, "ry": 0
+                },
                 {
                     "type": "rect", "left": 50, "top": 50, "width": 20, "height": 20, "fill": "green", "overlayFill": null, "stroke": null, "strokeWidth": 1, "strokeDashArray": null, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 1, "selectable": true, "hasControls": true, "hasBorders": true, "hasRotatingPoint": false, "transparentCorners": true, "perPixelTargetFind": false, "rx": 0, "ry": 0
                 },
@@ -59,6 +60,20 @@
         //All of this property is pre-defined data. you can totally ignore the problem how to prepare the data.
         ///VERY IMPORT: please give the exactly definition of this JSONDATA.
         homectl.setHomeData(jsondata);
+//        AFurniture.fromURL('https://www.google.com.ua/images/srpr/logo11w.png', function(img){
+//            homectl._scene.add(img);
+//        });
+//        AFurniture.fromObject({
+//                    "type": "furniture",
+//                    "src": "https://www.google.com.ua/images/srpr/logo11w.png",
+//                    "left": 50,
+//                    "top": 50,
+//                    "width": 300,
+//                    "height": 100,
+//                    "overlayFill": null, "stroke": null, "strokeWidth": 1, "strokeDashArray": null, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 1, "selectable": true, "hasControls": true, "hasBorders": true, "hasRotatingPoint": false, "transparentCorners": true, "perPixelTargetFind": false, "rx": 0, "ry": 0
+//                },function(img){
+//            homectl._scene.add(img);
+//        });
         //after this call, the canvas will be showed.
 
         //set home controller to enter an edit mode. In this mode, the controller is responsible react with mouse/touch/keyboard to replace some furniture. This is default mode after create. another mode is Draw used to draw wall.
@@ -80,9 +95,9 @@
         //$(.xxx).on('click',function(){
 
         //the follow action function is called after furniture data is received.
-        homectl.replace(obj, newobj);
+//        homectl.replace(obj, newobj);
         //same with top, except the second parameter is id.
-        homectl.replaceId(objid, newobj);
+//        homectl.replaceId(objid, newobj);
 
         //last, we try to get current persist object of current scene from webhome controller.
         jsondata = homectl.getJson();
