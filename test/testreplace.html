@@ -25,34 +25,49 @@
     </script>
 </head>
 <body>
-
-<div>
+<div style="margin: 0; padding: 0;">
     <h3>Testing </h3>
-    <canvas id="test" width="640" height="480"></canvas>
+    <div style="float: left;">
+        <canvas id="test" width="640" height="480"></canvas>
+    </div>
+    <div style="float: left;">
+        <button id="view">View</button>
+        <button id="edit">Edit</button>
+        <button id="replace">Replace</button>
+        <div style="display: none;" id="replace-form">
+            <select name="to" id="to">
+                <option value="Circle">Circle</option>
+                <option value="Rect">Rect</option>
+            </select>
+            <button id="submit-replace">Submit</button>
+        </div>
+    </div>
 </div>
 <script>
     require(['webhome', 'furniture/abstract'], function(WebHome, AFurniture){
-//        console.log(new WebHome('test'));
         //first, we create the webhome controller based our canvas.
-        var homectl = new WebHome('test');
-        var jsondata = {
-            "objects": [
-                {
-                    "type": "furniture",
-                    "src": "https://www.google.com.ua/images/srpr/logo11w.png",
-                    "left": 50,
-                    "top": 50,
-                    "width": 300,
-                    "height": 100,
-                    "overlayFill": null, "stroke": null, "strokeWidth": 1, "strokeDashArray": null, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 1, "selectable": true, "hasControls": true, "hasBorders": true, "hasRotatingPoint": false, "transparentCorners": true, "perPixelTargetFind": false, "rx": 0, "ry": 0
-                },
-                {
-                    "type": "rect", "left": 50, "top": 50, "width": 20, "height": 20, "fill": "green", "overlayFill": null, "stroke": null, "strokeWidth": 1, "strokeDashArray": null, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 1, "selectable": true, "hasControls": true, "hasBorders": true, "hasRotatingPoint": false, "transparentCorners": true, "perPixelTargetFind": false, "rx": 0, "ry": 0
-                },
-                {"type": "circle", "left": 100, "top": 100, "width": 100, "height": 100, "fill": "red", "overlayFill": null, "stroke": null, "strokeWidth": 1, "strokeDashArray": null, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 1, "selectable": true, "hasControls": true, "hasBorders": true, "hasRotatingPoint": false, "transparentCorners": true, "perPixelTargetFind": false, "radius": 50}
-            ],
-            "background": "rgba(0, 0, 0, 0)"
-        };
+        var
+            homectl = new WebHome('test'),
+            replaceForm = document.querySelector('#replace-form'),
+            jsondata = {
+                "objects": [
+                    {
+                        "type": "furniture",
+                        "src": "https://www.google.com.ua/images/srpr/logo11w.png",
+                        "left": 50,
+                        "top": 50,
+                        "width": 300,
+                        "height": 100,
+                        "overlayFill": null, "stroke": null, "strokeWidth": 1, "strokeDashArray": null, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 1, "selectable": true, "hasControls": true, "hasBorders": true, "hasRotatingPoint": false, "transparentCorners": true, "perPixelTargetFind": false, "rx": 0, "ry": 0
+                    },
+                    {
+                        "type": "rect", "left": 50, "top": 50, "width": 20, "height": 20, "fill": "green", "overlayFill": null, "stroke": null, "strokeWidth": 1, "strokeDashArray": null, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 1, "selectable": true, "hasControls": true, "hasBorders": true, "hasRotatingPoint": false, "transparentCorners": true, "perPixelTargetFind": false, "rx": 0, "ry": 0
+                    },
+                    {"type": "circle", "left": 100, "top": 100, "width": 100, "height": 100, "fill": "red", "overlayFill": null, "stroke": null, "strokeWidth": 1, "strokeDashArray": null, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 1, "selectable": true, "hasControls": true, "hasBorders": true, "hasRotatingPoint": false, "transparentCorners": true, "perPixelTargetFind": false, "radius": 50}
+                ],
+                "background": "rgba(0, 0, 0, 0)"
+            }
+        ;
 
         //we will using backbone.js to sync the data with remote server, after get the data, we set the dataset.
         //You need to define the jsondata format.
@@ -62,25 +77,30 @@
         homectl.setHomeData(jsondata, function(){
             homectl.setState('view');
         });
-//        AFurniture.fromURL('https://www.google.com.ua/images/srpr/logo11w.png', function(img){
-//            homectl._scene.add(img);
-//        });
-//        AFurniture.fromObject({
-//                    "type": "furniture",
-//                    "src": "https://www.google.com.ua/images/srpr/logo11w.png",
-//                    "left": 50,
-//                    "top": 50,
-//                    "width": 300,
-//                    "height": 100,
-//                    "overlayFill": null, "stroke": null, "strokeWidth": 1, "strokeDashArray": null, "scaleX": 1, "scaleY": 1, "angle": 0, "flipX": false, "flipY": false, "opacity": 1, "selectable": true, "hasControls": true, "hasBorders": true, "hasRotatingPoint": false, "transparentCorners": true, "perPixelTargetFind": false, "rx": 0, "ry": 0
-//                },function(img){
-//            homectl._scene.add(img);
-//        });
-        //after this call, the canvas will be showed.
 
-        //set home controller to enter an edit mode. In this mode, the controller is responsible react with mouse/touch/keyboard to replace some furniture. This is default mode after create. another mode is Draw used to draw wall.
-        //homectl.getState(); //we can get current home controller state through this function.
+        document.querySelector('#view').addEventListener('click', function(){
+            homectl.setState('view');
+        });
 
+        document.querySelector('#edit').addEventListener('click', function(){
+            homectl.setState('draw');
+        });
+
+        document.querySelector('#replace').addEventListener('click', function(){
+            replaceForm.style.display = (replaceForm.style.display == 'block')?'none':'block';
+        });
+
+        replaceForm.querySelector('#submit-replace').addEventListener('click', function(){
+            if(!homectl.getActiveObject()){
+                alert('Select Object Before');
+            }
+            var
+                name = document.querySelector('#to').value,
+                newObj = new fabric[name]()
+            ;
+            homectl.replace(homectl.getActiveObject(), newObj);
+            replaceForm.style.display = 'none';
+        });
 
         //connect an event from homectl.
         //at now, we support one event 'replace'. If user click on a furniture. the callback called. clicked object as the parameter.

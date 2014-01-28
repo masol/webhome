@@ -78,6 +78,9 @@ define(['underscore', 'fabric'], function(_, fabric){
             callback = callback || function(){};
             this._scene.loadFromJSON(data, callback);
         },
+        getActiveObject: function(){
+            return this._scene.getActiveObject();
+        },
         on: function(eventName, callback){
             if(fakeEvents[eventName]){
                 fakeEvents[eventName](callback, this._scene);
@@ -86,20 +89,21 @@ define(['underscore', 'fabric'], function(_, fabric){
             }
         },
         replace: function(object, newObject){
-
+            ['originX', 'originY', 'top', 'left', 'width', 'height', 'scaleX', 'scaleY'].forEach(function(prop){
+                newObject[prop] = object[prop];
+            });
+            object.remove();
+            this._scene.add(newObject);
         },
         setState: function(state){
             if(state == "draw"){
                 if(this._currentState != "draw"){
                     this._toggleStates(false);
                 }
-                this._scene.isDrawingMode = true;
-                this._scene.freeDrawingBrush.width = 10;
             }else{
                 if(this._currentState == "draw"){
                     this._toggleStates(true);
                 }
-                this._scene.isDrawingMode = false;
             }
             this._currentState = state;
         },
