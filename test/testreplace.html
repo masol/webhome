@@ -91,8 +91,9 @@
         });
 
         replaceForm.querySelector('#submit-replace').addEventListener('click', function(){
-            if(!homectl.getActiveObject()){
+            if(homectl.getActiveObject() == null){
                 alert('Select Object Before');
+                return ;
             }
             var
                 name = document.querySelector('#to').value,
