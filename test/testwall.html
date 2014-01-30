@@ -9,6 +9,7 @@
                 'jquery': '//code.jquery.com/jquery-1.11.0.min',
                 'underscore': '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min',
                 'webhome': '../src/webhome',
+                'wallEditor': '../src/wallEditor',
                 'furniture': '../src/furniture',
 //                'fabric': "//cdnjs.cloudflare.com/ajax/libs/fabric.js/1.4.0/fabric.min"
                 'fabric': "../vendor/fabric.js-1.4.0/dist/all.require"
@@ -36,7 +37,7 @@
         </div>
     </div>
     <script>
-        require(['webhome', 'furniture/wall'], function(WebHome, Wall){
+        require(['webhome', 'furniture/wall', 'wallEditor'], function(WebHome, Wall, WallEditor){
             var
                 homectl = new WebHome('test'),
                 drawRules = function(canvas, gridsize){
@@ -51,36 +52,8 @@
                         lineCount++;
                     }
                 },
-                drawer = false
+                drawer = new WallEditor(homectl._scene)
             ;
-            document.querySelector('#wall-edit').addEventListener('click', function(){
-                homectl.setState('draw');
-            });
-            var line, isDown;
-            homectl.on('mouse:down', function(o){
-                isDown = true;
-                var pointer = homectl._scene.getPointer(o.e);
-                var points = [ pointer.x, pointer.y, pointer.x, pointer.y ];
-                line = new Wall(points, {
-                    strokeWidth: 5,
-                    fill: '#aaa',
-                    stroke: '#aaa',
-                    originX: 'center',
-                    originY: 'center'
-                });
-                homectl._scene.add(line);
-            });
-
-            homectl.on('mouse:move', function(o){
-                if (!isDown) return;
-                var pointer = homectl._scene.getPointer(o.e);
-                line.set({ x2: pointer.x, y2: pointer.y });
-                homectl._scene.renderAll();
-            });
-
-            homectl.on('mouse:up', function(o){
-                isDown = false;
-            });
             homectl._scene.setBackgroundColor('#eee');
             //draw rules for
             drawRules(homectl._scene, 40);
