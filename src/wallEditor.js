@@ -1,7 +1,7 @@
 /**
  * Created by krona on 1/30/14.
  */
-define(['underscore', 'fabric', 'furniture/wall'], function(_, fabric, Wall){
+define(['lodash', 'fabric', 'furniture/wall'], function(_, fabric, Wall){
     var
         hitch = function(scope, callback){
             return function(){
@@ -27,7 +27,9 @@ define(['underscore', 'fabric', 'furniture/wall'], function(_, fabric, Wall){
             this._scene.add(this._group);
         },
         finishDraw: function(){
+            this._group.remove(this._current);
             this._current = undefined;
+            this._scene.renderAll();
         },
         onKeyUp: function(e){
             if(e.keyCode == 27){ //ESC button

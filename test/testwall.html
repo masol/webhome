@@ -7,17 +7,14 @@
         require.config({
             paths: {
                 'jquery': '//code.jquery.com/jquery-1.11.0.min',
-                'underscore': '//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min',
+                'lodash': '//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash',
                 'webhome': '../src/webhome',
                 'wallEditor': '../src/wallEditor',
                 'furniture': '../src/furniture',
-//                'fabric': "//cdnjs.cloudflare.com/ajax/libs/fabric.js/1.4.0/fabric.min"
-                'fabric': "../vendor/fabric.js-1.4.0/dist/all.require"
+                'fabric': "//cdnjs.cloudflare.com/ajax/libs/fabric.js/1.4.0/fabric.min"
+//                'fabric': "../vendor/fabric.js-1.4.0/dist/all.require"
             },
             shim: {
-                "underscore": {
-                    exports: "_"
-                },
                 "fabric": {
                     exports: "fabric"
                 }

@@ -14,7 +14,7 @@
 /** we using underscore.js to enable sub-module.
  * @FIXME: Shall we using more heavy library : require.js?
  */
-define(['underscore', 'fabric'], function(_, fabric){
+define(['lodash', 'fabric'], function(_, fabric){
     var
         fakeEvents = {
             hover: function(callback, scene){
