@@ -26,13 +26,22 @@ define(['lodash', 'fabric', 'furniture/wall'], function(_, fabric, Wall){
         },
         startDraw: function(){
             if(this._scope.getState() == 'wall'){
-                this._group = new fabric.Group();
-                this._scene.add(this._group);
+                this._group = [];
             }
         },
         finishDraw: function(){
-            this._group.remove(this._current);
+            this._current.remove();
             this._current = undefined;
+            var group = [];
+            this._group.forEach(function(item){
+                group.push(item.clone());
+                item.remove();
+            });
+            this._group = undefined;
+            group = new fabric.Group(group, {
+                selectable: true
+            });
+            this._scene.add(group);
             this._scene.renderAll();
         },
         onKeyUp: function(e){
@@ -65,8 +74,7 @@ define(['lodash', 'fabric', 'furniture/wall'], function(_, fabric, Wall){
                     originX: 'center',
                     originY: 'center'
                 });
-                this._group.add(this._current);
-                this._scene.renderAll();
+                this._scene.add(this._current);
             }
         }
     });
