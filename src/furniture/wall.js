@@ -3,8 +3,7 @@
  */
 define(['fabric'], function(fabric){
     fabric.Wall = fabric.util.createClass(fabric.Line, {
-        type: "wall",
-        angleRect: 5
+        type: "wall"
     });
 
     return fabric.Wall;

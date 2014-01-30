@@ -14,7 +14,7 @@
 /** we using underscore.js to enable sub-module.
  * @FIXME: Shall we using more heavy library : require.js?
  */
-define(['lodash', 'fabric'], function(_, fabric){
+define(['lodash', 'fabric', 'wallEditor'], function(_, fabric, WallEditor){
     var
         fakeEvents = {
             hover: function(callback, scene){
@@ -35,7 +35,8 @@ define(['lodash', 'fabric'], function(_, fabric){
     ;
     WebHome.prototype = _.extend(WebHome.prototype, {
         _scene: null,
-        _currentState: "draw",
+        _currentState: undefined,
+        _wallEditor: undefined,
         _keyBinding: function(){
             var that = this;
             window.onkeyup = function(e){
@@ -61,6 +62,8 @@ define(['lodash', 'fabric'], function(_, fabric){
             try{
                 this._scene = new fabric.Canvas(CanvasID);
                 this._keyBinding()._createContextMenu();
+                this.setState('draw');
+                this._wallEditor = new WallEditor(this);
                 return this;
             }catch(e){
                 alert("you need fabric.js library to use webhome");
@@ -96,25 +99,33 @@ define(['lodash', 'fabric'], function(_, fabric){
             this._scene.add(newObject);
         },
         setState: function(state){
-            if(state == "draw"){
-                if(this._currentState != "draw"){
-                    this._toggleStates(false);
-                }
-            }else{
-                if(this._currentState == "draw"){
-                    this._toggleStates(true);
-                }
+            var name = '_set' + state.charAt(0).toUpperCase() + state.slice(1) + 'Mode';
+            if(this[name]){
+                this[name]();
             }
-            this._currentState = state;
         },
         getState: function(){
             return this._currentState;
         },
+        _setViewMode: function(){
+            this._toggleStates(true);
+            this._currentState = 'view';
+        },
+        _setEditMode: function(){
+            this._toggleStates(false);
+            this._currentState = 'edit';
+        },
+        _setWallMode: function(){
+            this._toggleStates(false);
+            this._currentState = 'wall';
+        },
         _toggleStates: function(to){
             this._scene._objects.forEach(function(object){
-                object.selectable = !to;
-                object.lockMovementX = to;
-                object.lockMovementY = to;
+                if(['furniture', 'wall'].indexOf(object.type) != -1){
+                    object.selectable = !to;
+                    object.lockMovementX = to;
+                    object.lockMovementY = to;
+                }
             });
             this._scene.renderAll();
         }

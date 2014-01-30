@@ -29,8 +29,9 @@
             <canvas id="test" width="642" height="642"></canvas>
         </div>
         <div style="float: left;">
-            <button id="wall-edit">Edit Wall</button>
-            <button id="wall-view">View Wall</button>
+            <button id="view-mode">View</button>
+            <button id="edit-mode">Edit Mode</button>
+            <button id="wall-mode">Wall Mode</button>
         </div>
     </div>
     <script>
@@ -48,10 +49,19 @@
                         canvas.add(new fabric.Line([-halfWidth -5, gridsize*x - halfWidth, halfWidth, gridsize*x - halfWidth],{ stroke: "#ccc", strokeWidth: 2, selectable:false, strokeDashArray: [5, 5]}));
                         lineCount++;
                     }
-                },
-                drawer = new WallEditor(homectl._scene)
+                }
             ;
             homectl._scene.setBackgroundColor('#eee');
+
+            document.querySelector('#view-mode').addEventListener('click', function(){
+                homectl.setState('view');
+            });
+            document.querySelector('#edit-mode').addEventListener('click', function(){
+                homectl.setState('edit');
+            });
+            document.querySelector('#wall-mode').addEventListener('click', function(){
+                homectl.setState('wall');
+            });
             //draw rules for
             drawRules(homectl._scene, 40);
         });
