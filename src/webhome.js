@@ -14,7 +14,7 @@
 /** we using underscore.js to enable sub-module.
  * @FIXME: Shall we using more heavy library : require.js?
  */
-define(['lodash', 'fabric', 'wallEditor'], function(_, fabric, WallEditor){
+define(['lodash', 'fabric', 'webhome/wallEditor'], function (_, fabric, WallEditor) {
     var
         fakeEvents = {
             hover: function(callback, scene){

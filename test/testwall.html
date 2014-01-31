@@ -8,8 +8,7 @@
             paths: {
                 'jquery': '//code.jquery.com/jquery-1.11.0.min',
                 'lodash': '//cdnjs.cloudflare.com/ajax/libs/lodash.js/2.4.1/lodash',
-                'webhome': '../src/webhome',
-                'wallEditor': '../src/wallEditor',
+                'webhome': '../src',
                 'furniture': '../src/furniture',
                 'fabric': "//cdnjs.cloudflare.com/ajax/libs/fabric.js/1.4.0/fabric.min"
 //                'fabric': "../vendor/fabric.js-1.4.0/dist/all.require"
@@ -35,7 +34,7 @@
         </div>
     </div>
     <script>
-        require(['webhome', 'furniture/wall', 'wallEditor'], function(WebHome, Wall, WallEditor){
+        require(['webhome/webhome', 'webhome/furniture/wall', 'webhome/wallEditor'], function (WebHome, Wall, WallEditor) {
             var
                 homectl = new WebHome('test'),
                 drawRules = function(canvas, gridsize){
