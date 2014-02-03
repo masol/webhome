@@ -39,19 +39,21 @@ define(['lodash', 'fabric', 'webhome/util/lang', 'webhome/furniture/wall'], func
     WallEditor.prototype = _.extend(WallEditor.prototype, /** @lends WallEditor.prototype */{
         _scene: undefined,
         _scope: undefined,
-        _group: undefined,
+        _mover: undefined,
+        _mouseDown: undefined,
         _current: undefined,
         init: function(scope){
             this._scope = scope;
             this._scene = scope._scene;
             this._scene.on('mouse:up', lang.hitch(this, this.onClick));
+            this._scene.on('mouse:down', lang.hitch(this, this.onMouseDown));
             this._scene.on('object:moving', lang.hitch(this, this.onPointMove));
             this._scene.on('mouse:move', lang.hitch(this, this.onMouseMove));
             window.addEventListener('keyup', lang.hitch(this, this.onKeyUp));
         },
         startDraw: function(){
             if(this._scope.getState() == 'wall'){
-                this._group = [];
+//                this._group = [];
             }
         },
         finishDraw: function(){
@@ -89,15 +91,23 @@ define(['lodash', 'fabric', 'webhome/util/lang', 'webhome/furniture/wall'], func
             }
             this._scene.renderAll();
         },
+        onMouseDown: function () {
+            this._mouseDown = true;
+        },
         onMouseMove: function(o){
             var pointer = this._scene.getPointer(o.e);
+            if (this._mouseDown) {
+                this._mover = true;
+            }
             if(this._current){
                 this._current.set({ x2: pointer.x, y2: pointer.y });
                 this._scene.renderAll();
             }
         },
         onClick: function(o){
-            if(this._scope.getState() == 'wall'){
+            if (this._scope.getState() == 'wall' && !this._mover) {
+                this._mover = undefined;
+                this._mouseDown = undefined;
                 var pointer = this._scene.getPointer(o.e);
                 var points = [ pointer.x, pointer.y, pointer.x, pointer.y ];
                 var beginPoint = getPoint(pointer);
