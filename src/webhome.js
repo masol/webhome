@@ -29,11 +29,16 @@ define(['lodash', 'fabric', 'webhome/wallEditor'], function (_, fabric, WallEdit
                 });
             }
         },
-        WebHome = function(CanvasID){
+        /**
+         * @class WebHome
+         * @param CanvasID
+         * @constructor
+         */
+            WebHome = function(CanvasID){
             this.create(CanvasID);
         }
     ;
-    WebHome.prototype = _.extend(WebHome.prototype, {
+    WebHome.prototype = _.extend(WebHome.prototype, /** @lends WebHome.prototype */{
         _scene: null,
         _currentState: undefined,
         _wallEditor: undefined,

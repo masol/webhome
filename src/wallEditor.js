@@ -74,21 +74,38 @@ define(['lodash', 'fabric', 'webhome/util/lang', 'webhome/furniture/wall'], func
         },
         onPointMove: function (e) {
             var
-                target = e.target,
-                position = {
-                    x: target.left,
-                    y: target.top
+                targets = [],
+                basePosition = {
+                    x: 0,
+                    y: 0
                 }
                 ;
-            if (target.walls && target.walls.length != 0) {
-                target.walls.forEach(function (wall) {
-                    if (wall.position == 1) {
-                        wall.wall.set({x1: position.x + 2, y1: position.y + 2});
-                    } else {
-                        wall.wall.set({x2: position.x + 2, y2: position.y + 2});
-                    }
-                });
+            if (e.target.type && !e.target.objects) {
+                targets.push(e.target);
+            } else {
+                targets = e.target.objects;
+                basePosition = {
+                    x: e.target.left,
+                    y: e.target.top
+                };
             }
+            targets.forEach(function (target) {
+                var
+                    position = {
+                        x: basePosition.x + target.left,
+                        y: basePosition.y + target.top
+                    }
+                    ;
+                if (target.walls && target.walls.length != 0) {
+                    target.walls.forEach(function (wall) {
+                        if (wall.position == 1) {
+                            wall.wall.set({x1: position.x + 2, y1: position.y + 2});
+                        } else {
+                            wall.wall.set({x2: position.x + 2, y2: position.y + 2});
+                        }
+                    });
+                }
+            }, this);
             this._scene.renderAll();
         },
         onMouseDown: function () {
