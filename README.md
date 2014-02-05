@@ -6,7 +6,8 @@ WebHome
 Background
 ----------
 
- webhome is open source project supported by [SanPolo.Co.LTD](http://www.spolo.org). Official hosted at [opensource community of SanPolo Co.LTD](https://osc.spolo.org/root/webhome/tree/master).
+ Webhome is open source project supported by [SanPolo.Co.LTD](http://www.spolo.org). Official hosted at [Github](https://github.com/masol/webhome). 
+ Before you begin, please read the [Detail Background](../../wiki/Background) carefully.
  
 
 about the code
@@ -43,6 +44,24 @@ This two step is easy too. just need more widget,it's same with home edit widget
 7. The exported data can generate some 3d scene(generate in server side because we need model data) and show/or edit in web3d editor widget. (This may cause another project).
 
 8. More for the futher requirement.
+
+
+Simlar Projects
+-----------------
+* [Sweet home](http://www.sweethome3d.com/)
+* [Planner 5D](https://planner5d.com/)
+* [Autodesk homestyler](http://www.homestyler.com/)
+* [Live Interior 3D Pro](http://www.belightsoft.com/products/liveinterior/overview.php)
+* [LoveMyHome Designer](http://www.lovemyhome.net/)
+* [Floorplanner](http://www.floorplanner.com/)
+* [MagicPlan](http://www.sensopia.com/english/index.html) : This is iphone app and has amazing convenient manner to generate house style.
+ 
+Feature of webhome
+------------------
+* Web-based. Can run on every browser that support HTML5 Canvas.
+* Open source under MIT.
+* Easy to use.
+* Used for end-user. Mainly using 2D to represent the design.
 
 
 Cooperation
