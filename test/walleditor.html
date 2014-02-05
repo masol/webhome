@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Wall Editor Test</title>
+    <script src="../bower_components/requirejs/require.js"></script>
+    <script>
+        require.config({
+            paths: {
+                "jquery": "../bower_components/jquery/jquery",
+                "lodash": "../bower_components/lodash/dist/lodash",
+                "fabric": "../bower_components/fabric/dist/all",
+                "src": "../src",
+                "furniture": "../src/furniture"
+            },
+            shim: {
+                "fabric": {
+                    exports: "fabric"
+                }
+            }
+        });
+        </script>
+</head>
+<body>
+  <canvas id="cvs" width="1024" height="600"></canvas>
+  <input type="button" data-state-switch="draw" value="Draw Mode" />
+  <input type="button" data-state-switch="edit" value="Edit Mode" />
+  <input type="button" data-state-switch="wall" value="Wall Mode" />
+  <script type="text/javascript">
+
+      require(['jquery', 'src/webhome', 'src/widgets/wallEditor'], function ($, WebHome, WallEditor) {
+
+          var homectl = WebHome.create("cvs");
+          homectl.setBackground("grid.gif");
+          homectl.setState("edit");
+
+          homectl.addWidget('wallEditor', new WallEditor());
+
+          $('[data-state-switch]').click(function(e){
+              e.preventDefault();
+              homectl.setState($(this).data('state-switch'));
+          });
+
+      });
+  </script>
+</body>
+</html>
