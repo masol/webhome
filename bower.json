@@ -1,0 +1,20 @@
+{
+    "name": "WebHome",
+    "version": "0.0.0",
+    "homepage": "https://github.com/masol/webhome",
+    "description": "WebHome is a javascript library that utilizing the power of html5 canvas to help people designing their home.",
+    "license": "MIT",
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ],
+    "dependencies": {
+        "requirejs": "2.1.*",
+        "fabric": "1.4.*",
+        "jquery": "1.11.*",
+        "lodash": "2.4.1"
+    }
+}
