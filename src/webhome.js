@@ -126,7 +126,7 @@ define(['lodash', 'fabric', 'webhome/wallEditor'], function (_, fabric, WallEdit
         },
         _toggleStates: function(to){
             this._scene._objects.forEach(function(object){
-                if(['furniture', 'wall'].indexOf(object.type) != -1){
+                if (['furniture'].indexOf(object.type) != -1) {
                     object.selectable = !to;
                     object.lockMovementX = to;
                     object.lockMovementY = to;

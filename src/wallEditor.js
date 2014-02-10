@@ -10,6 +10,9 @@ define(['lodash', 'fabric', 'webhome/util/lang', 'webhome/furniture/wall'], func
             WallEditor = function(scene){
             this.init(scene);
         },
+    // ExtendPoints may be added globally for simplify editing
+        points = [],
+        walls = [],
         makeExtendPoint = function (left, top, walls) {
             var c = new fabric.Circle({
                 left: left - 2,
@@ -24,12 +27,77 @@ define(['lodash', 'fabric', 'webhome/util/lang', 'webhome/furniture/wall'], func
             points.push(c);
             return c;
         },
-    // ExtendPoints may be added globally for simplify editing
-        points = [],
+        makeWall = function (pointer, scene) {
+            var
+                points = [ pointer.x, pointer.y, pointer.x, pointer.y ],
+                wall = new Wall(points, {
+                    strokeWidth: 5,
+                    fill: '#aaa',
+                    stroke: '#aaa',
+                    originX: 'center',
+                    originY: 'center',
+                    selectable: false
+                })
+                ;
+            scene.add(wall);
+            var
+                beginPoint = makeExtendPoint(wall.x1, wall.y1, [
+                    {position: 1, wall: wall}
+                ]),
+                endPoint = makeExtendPoint(wall.x2, wall.y2, [
+                    {position: 2, wall: wall}
+                ])
+                ;
+            endPoint.strokeWidth = beginPoint.strokeWidth = 4;
+            beginPoint.hidden = endPoint.hidden = true;
+            wall.hasControls = false;
+            wall.onMove = function () {
+                var halfs = {
+                    left: wall.width / 2,
+                    top: wall.height / 2
+                };
+                console.log(wall.x1, wall.x2);
+                console.log(wall.y1, wall.y2);
+                beginPoint.set({left: wall.left - halfs.left - 2, top: wall.top - halfs.top - 2});
+                endPoint.set({left: wall.left + halfs.left - 6, top: wall.top + halfs.top - 6});
+                beginPoint.setCoords() && endPoint.setCoords();
+            };
+            wall.showPoints = function () {
+                beginPoint.visible = endPoint.visible = true;
+                wall.selectable = true;
+            };
+            wall.hidePoints = function () {
+                beginPoint.visible = endPoint.visible = false;
+                wall.selectable = false;
+            };
+            wall.hidePoints();
+            scene.add(beginPoint);
+            scene.add(endPoint);
+
+            return wall;
+        },
+        makeWallPoint = function (pointer, scene, wall, position) {
+            var beginPoint = getPoint(pointer);
+            if (!beginPoint) {
+                beginPoint = makeExtendPoint(pointer.x, pointer.y, [
+                    {
+                        position: position,
+                        wall: wall
+                    }
+                ]);
+                scene.add(beginPoint);
+            } else {
+                beginPoint.walls.push({
+                    position: position,
+                    wall: wall
+                })
+            }
+        },
+
         getPoint = function (pointer) {
             var point;
             points.forEach(function (item) {
-                if (Math.abs(item.top - pointer.y) < 10 && Math.abs(item.left - pointer.x) < 10) {
+                if (!item.hidden && Math.abs(item.top - pointer.y) < 10 && Math.abs(item.left - pointer.x) < 10) {
                     point = item;
                 }
             });
@@ -49,6 +117,8 @@ define(['lodash', 'fabric', 'webhome/util/lang', 'webhome/furniture/wall'], func
             this._scene.on('mouse:down', lang.hitch(this, this.onMouseDown));
             this._scene.on('object:moving', lang.hitch(this, this.onPointMove));
             this._scene.on('mouse:move', lang.hitch(this, this.onMouseMove));
+            this._scene.on('selection:created', lang.hitch(this, this.onSelection));
+            this._scene.on('selection:cleared', lang.hitch(this, this.onSelectionCleared));
             window.addEventListener('keyup', lang.hitch(this, this.onKeyUp));
         },
         startDraw: function(){
@@ -65,6 +135,16 @@ define(['lodash', 'fabric', 'webhome/util/lang', 'webhome/furniture/wall'], func
             this._current = undefined;
             this._scene.renderAll();
         },
+        onSelection: function (o) {
+            o.target.hasControls = false;
+        },
+        onSelectionCleared: function (o) {
+            console.log(this);
+            if (this.activeObject && this.activeObject.hidePoints) {
+                this.activeObject.hidePoints();
+                this._scene.renderAll();
+            }
+        },
         onKeyUp: function(e){
             if(this._scope.getState() == 'wall'){
                 if(e.keyCode == 27){ //ESC button
@@ -73,6 +153,12 @@ define(['lodash', 'fabric', 'webhome/util/lang', 'webhome/furniture/wall'], func
             }
         },
         onPointMove: function (e) {
+            if (e.target.onMove) {
+                e.target.setCoords();
+                e.target.onMove();
+                this._scene.renderAll();
+                return;
+            }
             var
                 targets = [],
                 basePosition = {
@@ -103,6 +189,7 @@ define(['lodash', 'fabric', 'webhome/util/lang', 'webhome/furniture/wall'], func
                         } else {
                             wall.wall.set({x2: position.x + 2, y2: position.y + 2});
                         }
+                        wall.wall.setCoords();
                     });
                 }
             }, this);
@@ -118,59 +205,31 @@ define(['lodash', 'fabric', 'webhome/util/lang', 'webhome/furniture/wall'], func
             }
             if(this._current){
                 this._current.set({ x2: pointer.x, y2: pointer.y });
+                this._current.setCoords();
                 this._scene.renderAll();
             }
         },
         onClick: function(o){
             if (this._scope.getState() == 'wall' && !this._mover) {
-                this._mover = undefined;
-                this._mouseDown = undefined;
                 var pointer = this._scene.getPointer(o.e);
-                var points = [ pointer.x, pointer.y, pointer.x, pointer.y ];
-                var beginPoint = getPoint(pointer);
                 if(this._current){
                     this._current.set({ x2: pointer.x, y2: pointer.y });
-                    if (!beginPoint) {
-                        beginPoint = makeExtendPoint(pointer.x, pointer.y, [
-                            {
-                                position: 2,
-                                wall: this._current
-                            }
-                        ]);
-                        this._scene.add(beginPoint);
-                    } else {
-                        beginPoint.walls.push({
-                            position: 2,
-                            wall: this._current
-                        })
-                    }
+                    this._current.setCoords();
+                    makeWallPoint(pointer, this._scene, this._current, 2);
                 } else {
                     this.startDraw();
                 }
-                this._current = new Wall(points, {
-                    strokeWidth: 5,
-                    fill: '#aaa',
-                    stroke: '#aaa',
-                    originX: 'center',
-                    originY: 'center',
-                    selectable: false
-                });
-                this._scene.add(this._current);
-                if (!beginPoint) {
-                    beginPoint = makeExtendPoint(pointer.x, pointer.y, [
-                        {
-                            position: 1,
-                            wall: this._current
-                        }
-                    ]);
-                    this._scene.add(beginPoint);
-                } else {
-                    beginPoint.walls.push({
-                        position: 1,
-                        wall: this._current
-                    })
+                this._current = makeWall(pointer, this._scene);
+                makeWallPoint(pointer, this._scene, this._current, 1);
+            } else if (!this._mover && o.target && o.target.type == 'wall') {
+                if (o.target.showPoints) {
+                    this.activeObject = o.target;
+                    o.target.showPoints();
                 }
             }
+            this._mover = false;
+            this._mouseDown = false;
+            this._scene.renderAll();
         }
     });
     return WallEditor;
