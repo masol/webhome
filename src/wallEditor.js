@@ -27,6 +27,17 @@ define(['lodash', 'fabric', 'webhome/util/lang', 'webhome/furniture/wall'], func
             points.push(c);
             return c;
         },
+        getDirection = function (wall) {
+            if (wall.x1 < wall.x2 && wall.y1 < wall.y2) {
+                return 'top-right';
+            } else if (wall.x1 > wall.x2 && wall.y1 < wall.y2) {
+                return 'bottom-right';
+            } else if (wall.x1 > wall.x2 && wall.y1 > wall.y2) {
+                return 'bottom-left';
+            } else {
+                return 'top-left';
+            }
+        },
         makeWall = function (pointer, scene) {
             var
                 points = [ pointer.x, pointer.y, pointer.x, pointer.y ],
@@ -52,14 +63,55 @@ define(['lodash', 'fabric', 'webhome/util/lang', 'webhome/furniture/wall'], func
             beginPoint.hidden = endPoint.hidden = true;
             wall.hasControls = false;
             wall.onMove = function () {
-                var halfs = {
-                    left: wall.width / 2,
-                    top: wall.height / 2
-                };
-                console.log(wall.x1, wall.x2);
-                console.log(wall.y1, wall.y2);
-                beginPoint.set({left: wall.left - halfs.left - 2, top: wall.top - halfs.top - 2});
-                endPoint.set({left: wall.left + halfs.left - 6, top: wall.top + halfs.top - 6});
+                var
+                    halfs = {
+                        left: wall.width / 2,
+                        top: wall.height / 2
+                    },
+                    point = {
+                        x1: undefined,
+                        x2: undefined,
+                        y1: undefined,
+                        y2: undefined
+                    }
+                    ;
+                // We check direction of Wall for correct points position
+                switch (getDirection(wall)) {
+                    case 'top-right':
+                        point = {
+                            x1: wall.left - halfs.left,
+                            x2: wall.left + halfs.left,
+                            y1: wall.top - halfs.top,
+                            y2: wall.top + halfs.top
+                        };
+                        break;
+                    case 'bottom-right':
+                        point = {
+                            x1: wall.left + halfs.left,
+                            x2: wall.left - halfs.left,
+                            y1: wall.top - halfs.top,
+                            y2: wall.top + halfs.top
+                        };
+                        break;
+                    case 'bottom-left':
+                        point = {
+                            x1: wall.left + halfs.left,
+                            x2: wall.left - halfs.left,
+                            y1: wall.top + halfs.top,
+                            y2: wall.top - halfs.top
+                        };
+                        break;
+                    case 'top-left':
+                        point = {
+                            x1: wall.left - halfs.left,
+                            x2: wall.left + halfs.left,
+                            y1: wall.top + halfs.top,
+                            y2: wall.top - halfs.top
+                        };
+                        break;
+                }
+                beginPoint.set({left: point.x1, top: point.y1});
+                endPoint.set({left: point.x2, top: point.y2});
                 beginPoint.setCoords() && endPoint.setCoords();
             };
             wall.showPoints = function () {
