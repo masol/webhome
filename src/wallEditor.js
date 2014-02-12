@@ -42,6 +42,7 @@ define(['lodash', 'fabric', 'webhome/util/lang', 'webhome/furniture/wall'], func
             var
                 points = [ pointer.x, pointer.y, pointer.x, pointer.y ],
                 wall = new Wall(points, {
+                    id: walls.length + 1,
                     strokeWidth: 5,
                     fill: '#aaa',
                     stroke: '#aaa',
@@ -126,6 +127,10 @@ define(['lodash', 'fabric', 'webhome/util/lang', 'webhome/furniture/wall'], func
             scene.add(beginPoint);
             scene.add(endPoint);
 
+            wall.beginPoint = beginPoint;
+            wall.endPoint = endPoint;
+            walls.push(wall);
+
             return wall;
         },
         makeWallPoint = function (pointer, scene, wall, position) {
@@ -144,6 +149,10 @@ define(['lodash', 'fabric', 'webhome/util/lang', 'webhome/furniture/wall'], func
                     wall: wall
                 })
             }
+            if (!Array.isArray(wall.points)) {
+                wall.points = [];
+            }
+            wall.points.push(beginPoint);
         },
 
         getPoint = function (pointer) {
@@ -191,9 +200,11 @@ define(['lodash', 'fabric', 'webhome/util/lang', 'webhome/furniture/wall'], func
             o.target.hasControls = false;
         },
         onSelectionCleared: function (o) {
-            console.log(this);
             if (this.activeObject && this.activeObject.hidePoints) {
                 this.activeObject.hidePoints();
+                this.activeObject.setCoords();
+                this.checkPoints();
+                this.activeObject = undefined;
                 this._scene.renderAll();
             }
         },
@@ -208,6 +219,7 @@ define(['lodash', 'fabric', 'webhome/util/lang', 'webhome/furniture/wall'], func
             if (e.target.onMove) {
                 e.target.setCoords();
                 e.target.onMove();
+                this.activeObject && this.checkPoints();
                 this._scene.renderAll();
                 return;
             }
@@ -282,6 +294,23 @@ define(['lodash', 'fabric', 'webhome/util/lang', 'webhome/furniture/wall'], func
             this._mover = false;
             this._mouseDown = false;
             this._scene.renderAll();
+        },
+        checkPoints: function () {
+            var
+                wall = this.activeObject
+                ;
+            _.remove(wall.points, function (point) {
+                point.setCoords();
+                _.remove(point.walls, function (value) {
+                    return value.wall.id === wall.id;
+                });
+                if (point.walls.length == 0) {
+                    point.remove();
+                }
+                return true;
+            });
+            makeWallPoint({x: wall.beginPoint.left, y: wall.beginPoint.top}, this._scene, wall, 1);
+            makeWallPoint({x: wall.endPoint.left, y: wall.endPoint.top}, this._scene, wall, 2);
         }
     });
     return WallEditor;
