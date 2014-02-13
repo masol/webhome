@@ -1,7 +1,7 @@
 /**
  * Created by krona on 1/28/14.
  */
-define(['fabric'], function(fabric){
+define(['fabric', 'lodash'], function (fabric, _) {
     fabric.Wall = fabric.util.createClass(fabric.Line, {
         type: "wall",
         getDirection: function () {
@@ -22,6 +22,23 @@ define(['fabric'], function(fabric){
         hidePoints: function () {
             this.beginPoint.visible = this.endPoint.visible = false;
             this.selectable = false;
+        },
+        destroy: function () {
+            this.destroyPoints();
+            this.remove();
+        },
+        destroyPoints: function () {
+            var that = this;
+            _.remove(this.points, function (point) {
+                point.setCoords();
+                _.remove(point.walls, function (value) {
+                    return value.wall.id === that.id;
+                });
+                if (point.walls.length == 0) {
+                    point.remove();
+                }
+                return true;
+            });
         },
         onMove: function () {
             var

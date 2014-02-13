@@ -229,16 +229,7 @@ define(['lodash', 'fabric', 'webhome/util/lang', 'webhome/furniture/wall'], func
             var
                 wall = this.activeObject
                 ;
-            _.remove(wall.points, function (point) {
-                point.setCoords();
-                _.remove(point.walls, function (value) {
-                    return value.wall.id === wall.id;
-                });
-                if (point.walls.length == 0) {
-                    point.remove();
-                }
-                return true;
-            });
+            wall.destroyPoints();
             makeWallPoint({x: wall.beginPoint.left, y: wall.beginPoint.top}, this._scene, wall, 1);
             makeWallPoint({x: wall.endPoint.left, y: wall.endPoint.top}, this._scene, wall, 2);
         }

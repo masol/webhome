@@ -44,13 +44,18 @@ define(['lodash', 'fabric', 'webhome/wallEditor'], function (_, fabric, WallEdit
         _wallEditor: undefined,
         _keyBinding: function(){
             var that = this;
-            window.onkeyup = function(e){
+            window.addEventListener('keyup', function (e) {
                 if(e.keyCode == 46){ // remove object from canvas
                     if(that._scene){
-                        that._scene.remove(that._scene.getActiveObject());
+                        var activeObject = that._scene.getActiveObject();
+                        if (activeObject.destroy) {
+                            activeObject.destroy();
+                        } else {
+                            that._scene.remove(that._scene.getActiveObject());
+                        }
                     }
                 }
-            }
+            });
             return this;
         },
         _createContextMenu: function(){
