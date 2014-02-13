@@ -27,17 +27,6 @@ define(['lodash', 'fabric', 'webhome/util/lang', 'webhome/furniture/wall'], func
             points.push(c);
             return c;
         },
-        getDirection = function (wall) {
-            if (wall.x1 < wall.x2 && wall.y1 < wall.y2) {
-                return 'top-right';
-            } else if (wall.x1 > wall.x2 && wall.y1 < wall.y2) {
-                return 'bottom-right';
-            } else if (wall.x1 > wall.x2 && wall.y1 > wall.y2) {
-                return 'bottom-left';
-            } else {
-                return 'top-left';
-            }
-        },
         makeWall = function (pointer, scene) {
             var
                 points = [ pointer.x, pointer.y, pointer.x, pointer.y ],
@@ -63,73 +52,12 @@ define(['lodash', 'fabric', 'webhome/util/lang', 'webhome/furniture/wall'], func
             endPoint.strokeWidth = beginPoint.strokeWidth = 4;
             beginPoint.hidden = endPoint.hidden = true;
             wall.hasControls = false;
-            wall.onMove = function () {
-                var
-                    halfs = {
-                        left: wall.width / 2,
-                        top: wall.height / 2
-                    },
-                    point = {
-                        x1: undefined,
-                        x2: undefined,
-                        y1: undefined,
-                        y2: undefined
-                    }
-                    ;
-                // We check direction of Wall for correct points position
-                switch (getDirection(wall)) {
-                    case 'top-right':
-                        point = {
-                            x1: wall.left - halfs.left,
-                            x2: wall.left + halfs.left,
-                            y1: wall.top - halfs.top,
-                            y2: wall.top + halfs.top
-                        };
-                        break;
-                    case 'bottom-right':
-                        point = {
-                            x1: wall.left + halfs.left,
-                            x2: wall.left - halfs.left,
-                            y1: wall.top - halfs.top,
-                            y2: wall.top + halfs.top
-                        };
-                        break;
-                    case 'bottom-left':
-                        point = {
-                            x1: wall.left + halfs.left,
-                            x2: wall.left - halfs.left,
-                            y1: wall.top + halfs.top,
-                            y2: wall.top - halfs.top
-                        };
-                        break;
-                    case 'top-left':
-                        point = {
-                            x1: wall.left - halfs.left,
-                            x2: wall.left + halfs.left,
-                            y1: wall.top + halfs.top,
-                            y2: wall.top - halfs.top
-                        };
-                        break;
-                }
-                wall.set({x1: point.x1, x2: point.x2, y1: point.y1, y2: point.y2});
-                wall.beginPoint.set({left: point.x1, top: point.y1});
-                wall.endPoint.set({left: point.x2, top: point.y2});
-                wall.setCoords() && wall.beginPoint.setCoords() && wall.endPoint.setCoords();
-            };
-            wall.showPoints = function () {
-                beginPoint.visible = endPoint.visible = true;
-                wall.selectable = true;
-            };
-            wall.hidePoints = function () {
-                beginPoint.visible = endPoint.visible = false;
-                wall.selectable = false;
-            };
-            wall.hidePoints();
-            scene.add(beginPoint);
-            scene.add(endPoint);
-
             wall.beginPoint = beginPoint;
             wall.endPoint = endPoint;
+            wall.hidePoints();
+
+            scene.add(beginPoint);
+            scene.add(endPoint);
             walls.push(wall);
 
             return wall;
@@ -301,7 +229,6 @@ define(['lodash', 'fabric', 'webhome/util/lang', 'webhome/furniture/wall'], func
             var
                 wall = this.activeObject
                 ;
-            console.log(wall.id);
             _.remove(wall.points, function (point) {
                 point.setCoords();
                 _.remove(point.walls, function (value) {
