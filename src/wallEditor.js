@@ -111,9 +111,10 @@ define(['lodash', 'fabric', 'webhome/util/lang', 'webhome/furniture/wall'], func
                         };
                         break;
                 }
-                beginPoint.set({left: point.x1, top: point.y1});
-                endPoint.set({left: point.x2, top: point.y2});
-                beginPoint.setCoords() && endPoint.setCoords();
+                wall.set({x1: point.x1, x2: point.x2, y1: point.y1, y2: point.y2});
+                wall.beginPoint.set({left: point.x1, top: point.y1});
+                wall.endPoint.set({left: point.x2, top: point.y2});
+                wall.setCoords() && wall.beginPoint.setCoords() && wall.endPoint.setCoords();
             };
             wall.showPoints = function () {
                 beginPoint.visible = endPoint.visible = true;
@@ -219,7 +220,8 @@ define(['lodash', 'fabric', 'webhome/util/lang', 'webhome/furniture/wall'], func
             if (e.target.onMove) {
                 e.target.setCoords();
                 e.target.onMove();
-                this.activeObject && this.checkPoints();
+//                this.activeObject && this.activeObject.setCoords();
+//                this.activeObject && this.checkPoints();
                 this._scene.renderAll();
                 return;
             }
@@ -253,7 +255,7 @@ define(['lodash', 'fabric', 'webhome/util/lang', 'webhome/furniture/wall'], func
                         } else {
                             wall.wall.set({x2: position.x + 2, y2: position.y + 2});
                         }
-                        wall.wall.setCoords();
+                        wall.wall.onMove();
                     });
                 }
             }, this);
@@ -285,7 +287,7 @@ define(['lodash', 'fabric', 'webhome/util/lang', 'webhome/furniture/wall'], func
                 }
                 this._current = makeWall(pointer, this._scene);
                 makeWallPoint(pointer, this._scene, this._current, 1);
-            } else if (!this._mover && o.target && o.target.type == 'wall') {
+            } else if (o.target && o.target.type == 'wall') {
                 if (o.target.showPoints) {
                     this.activeObject = o.target;
                     o.target.showPoints();
@@ -299,6 +301,7 @@ define(['lodash', 'fabric', 'webhome/util/lang', 'webhome/furniture/wall'], func
             var
                 wall = this.activeObject
                 ;
+            console.log(wall.id);
             _.remove(wall.points, function (point) {
                 point.setCoords();
                 _.remove(point.walls, function (value) {
